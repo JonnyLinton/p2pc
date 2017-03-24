@@ -11,4 +11,3 @@ def parse_message(application_message):
         if len(elements) > 1:
             dict[elements[0]] = elements[1]
     return (dict["user"], dict["message"])
-    
