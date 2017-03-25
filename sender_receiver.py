@@ -7,6 +7,7 @@ def sender(user_name, ip_address, port):
     while True:
         user_message = input()
         application_message = build_message(user_message, user_name)
+        sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
         sock.sendto(application_message.encode("utf-8"), (ip_address, port))
 
 def receiver(port):
