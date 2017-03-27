@@ -1,17 +1,24 @@
 import socket
+
+import sys
+
 from parsing import build_message, parse_message
-from display import display
+from display import display, display_notif
+
 
 def sender(user_name, ip_address, port):
+    # join should go somewhere here
     while True:
         user_message = input()
         message_with_command = build_message(user_name, user_message)
         parsed_message = parse_message(message_with_command)
-        command  = parsed_message["command"]
-        if command is "/join":
-            return True
-        elif command is "/leave":
-            return True
+        command = parsed_message["command"]
+        # if command is "/join":
+        #     return True
+        if command is "/leave":
+            leave(user_name, ip_address, port)
+            sys.exit(0)
+            # not working right now...
         else:
             talk(user_name, parsed_message["message"], ip_address, port)
 
@@ -21,14 +28,20 @@ def receiver(port):
     while True:
         application_message = sock.recv(1024)
         message = application_message.decode("utf-8")
-        dict = parse_message(message)
-        display(dict["user"], dict["message"])
+        parsed_message = parse_message(message)
+        if parsed_message["message"] == "left!":
+            display_notif(parsed_message["user"], parsed_message["message"])
+        else:
+            display(parsed_message["user"], parsed_message["message"])
 
-def broadcast_message(user_name, command, message, ip, port):
+def broadcast_message(user_name, message, ip, port):
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     application_message = build_message(user_name, message)
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
     sock.sendto(application_message.encode("utf-8"), (ip, port))
 
 def talk(user_name, message, ip, port):
-    broadcast_message(user_name, "TALK", message, ip, port)
+    broadcast_message(user_name, message, ip, port)
+
+def leave(user_name, ip, port):
+    broadcast_message(user_name, "/leave", ip, port)
