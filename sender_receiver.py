@@ -1,9 +1,8 @@
+import os
 import socket
 
-import sys
-
-from parsing import build_message, parse_message
 from display import display, display_notif
+from parsing import build_message, parse_message
 
 
 def sender(user_name, ip_address, port):
@@ -15,9 +14,8 @@ def sender(user_name, ip_address, port):
         command = parsed_message["command"]
         # if command is "/join":
         #     return True
-        if command is "/leave":
+        if command == "/leave":
             leave(user_name, ip_address, port)
-            sys.exit(0)
             # not working right now...
         else:
             talk(user_name, parsed_message["message"], ip_address, port)
@@ -45,3 +43,4 @@ def talk(user_name, message, ip, port):
 
 def leave(user_name, ip, port):
     broadcast_message(user_name, "/leave", ip, port)
+    os._exit(0)
