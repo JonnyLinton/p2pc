@@ -1,8 +1,8 @@
 import os
 import socket
-
 from display import display, display_notif
 from parsing import build_message, parse_message
+from commands import dispatcher
 
 
 def sender(user_name, ip_address, port):
@@ -10,13 +10,14 @@ def sender(user_name, ip_address, port):
     while True:
         user_message = input()
         parsed_message = parse_message(build_message(user_name, user_message))
-        command = parsed_message["command"]
-        # if command is "/join":
-        #     return True
-        if command == "/leave":
-            leave(user_name, ip_address, port)
-        else:
-            talk(user_name, parsed_message["message"], ip_address, port)
+        dispatcher(parsed_message, ip_address, port)
+        # command = parsed_message["command"]
+        # # if command is "/join":
+        # #     return True
+        # if command == "/leave":
+        #     leave(user_name, ip_address, port)
+        # else:
+        #     talk(user_name, parsed_message["message"], ip_address, port)
 
 def receiver(port):
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -29,16 +30,3 @@ def receiver(port):
             display_notif(parsed_message["user"], parsed_message["message"])
         else:
             display(parsed_message["user"], parsed_message["message"])
-
-def broadcast_message(user_name, message, ip, port):
-    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    application_message = build_message(user_name, message)
-    sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
-    sock.sendto(application_message.encode("utf-8"), (ip, port))
-
-def talk(user_name, message, ip, port):
-    broadcast_message(user_name, message, ip, port)
-
-def leave(user_name, ip, port):
-    broadcast_message(user_name, "/leave", ip, port)
-    os._exit(0)
