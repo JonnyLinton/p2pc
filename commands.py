@@ -12,11 +12,6 @@ def dispatcher(parsed_message_dict, ip_address, port):
     else:
         talk(user_name, message, ip_address, port)
 
-# def is_global(command):
-#     if command == "/who":
-#         return False
-#     return True
-
 def broadcast_message(user_name, message, ip, port):
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     application_message = build_message(user_name, message)
