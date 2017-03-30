@@ -24,4 +24,4 @@ def receiver(port):
         application_message = sock.recv(1024)
         message = application_message.decode("utf-8")
         parsed_message = parse_message(message)
-        display(parsed_message["user"], parsed_message["message"])
+        display(parsed_message)

@@ -1,8 +1,10 @@
 from datetime import datetime
 
-def display(user_name, user_message):
+def display(parsed_message):
+    user_name, command, message = parsed_message["user"], parsed_message["command"], parsed_message["message"]
+
     current_time = datetime.now()
-    if user_message in ["/leave", "/join"]:
-        print(str(current_time) + " " + user_name + " " + notif_message)
+    if command in ["/leave", "/join"]:
+        print(str(current_time) + " " + user_name + " " + message)
     else:
-        print(str(current_time) + " " + "<" + user_name + ">: " + user_message)
+        print(str(current_time) + " " + "<" + user_name + ">: " + message)
