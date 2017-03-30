@@ -14,6 +14,7 @@ def sender(user_name, ip_address, port):
         parsed_message = parse_message(build_message(user_name, user_message))
         dispatcher(parsed_message, ip_address, port)
 
+
 def receiver(port):
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     sock.bind(("", port))
