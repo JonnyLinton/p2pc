@@ -9,14 +9,12 @@ def sender(user_name, ip_address, port):
     # join should go somewhere here
     while True:
         user_message = input()
-        message_with_command = build_message(user_name, user_message)
-        parsed_message = parse_message(message_with_command)
+        parsed_message = parse_message(build_message(user_name, user_message))
         command = parsed_message["command"]
         # if command is "/join":
         #     return True
         if command == "/leave":
             leave(user_name, ip_address, port)
-            # not working right now...
         else:
             talk(user_name, parsed_message["message"], ip_address, port)
 
