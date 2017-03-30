@@ -24,3 +24,5 @@ def talk(user_name, message, ip, port):
 def leave(user_name, ip, port):
     broadcast_message(user_name, "/leave", ip, port)
     os._exit(0)
+def join(user_name, ip, port):
+    broadcast_message(user_name, "/join", ip, port)

@@ -3,8 +3,8 @@ import re
 def build_message(user_name, user_message):
     if user_message == "/leave":
         return "user: " + user_name + "\n" + "command: /leave" + "\n" + "message: left!" + "\n\n"
-    # elif user_message == "/who":
-    #     return "user: " + user_name + "\n" + "command: " + "/who" + "\n" + "message: " + user_message + "\n\n"
+    elif user_message == "/join":
+        return "user: " + user_name + "\n" + "command: /join" + "\n" + "message: joined!" + "\n\n"
     else:
         return "user: " + user_name + "\n" + "command: /talk" + "\n" + "message: " + user_message + "\n\n"
 
