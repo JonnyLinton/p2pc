@@ -23,7 +23,10 @@ def talk(user_name, message, ip, port):
 
 def leave(user_name, ip, port):
     broadcast_message(user_name, "/leave", ip, port)
-    os._exit(0)
+    os._exit(0)  # Temporary fix
 
 def join(user_name, ip, port):
-    broadcast_message(user_name, "/join", ip, port)
+    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    application_message = "user: " + user_name + "\n" + "command: /join" + "\n" + "message: joined!" + "\n\n"
+    sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+    sock.sendto(application_message.encode("utf-8"), (ip, port))
