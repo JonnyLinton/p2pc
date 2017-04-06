@@ -4,7 +4,7 @@ from commands import dispatcher, join
 from display import display
 from parsing import build_message, parse_message
 from semaphore import s
-
+from user_list import current_online_users
 
 def sender(user_name, ip_address, port):
     s.acquire()
