@@ -1,12 +1,21 @@
 import re
 
+def build_message(user_name, command, message):
+    return "user: " + user_name + "\n" + "command: " + command + "\n" + "message: " + message + "\n\n"
 
-def build_message(user_name, user_message):
+def construct_message_parameters(user_name, user_message):
+    dict = {}
+    dict["user"] = user_name
     if user_message == "/leave":
-        return "user: " + user_name + "\n" + "command: /leave" + "\n" + "message: left!" + "\n\n"
+        dict["command"] = "/leave"
+        dict["message"] = ""
+    elif user_message == "/who":
+        dict["command"] = "/who"
+        dict["message"] = ""
     else:
-        return "user: " + user_name + "\n" + "command: /talk" + "\n" + "message: " + user_message + "\n\n"
-
+        dict["command"] = "/talk"
+        dict["message"] = user_message
+    return dict
 
 def parse_message(application_message):
     dict = {}

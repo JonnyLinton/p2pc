@@ -1,8 +1,9 @@
 import socket
 
-from commands import dispatcher, join
+from sender_commands import *
+from receiver_commands import receiver_dispatcher
 from display import display
-from parsing import build_message, parse_message
+from parsing import *
 from semaphore import s
 from user_list import current_online_users
 
@@ -11,11 +12,11 @@ def sender(user_name, ip_address, port):
     join(user_name, ip_address, port)
     while True:
         user_message = input()
-        parsed_message = parse_message(build_message(user_name, user_message))
-        dispatcher(parsed_message, ip_address, port)
+        message_dict = construct_message_parameters(user_name, user_message)
+        sender_dispatcher(message_dict, ip_address, port)
 
 
-def receiver(port):
+def receiver(ip_address, port):
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     sock.bind(("", port))
     s.release()
@@ -23,4 +24,5 @@ def receiver(port):
         application_message = sock.recv(1024)
         message = application_message.decode("utf-8")
         parsed_message = parse_message(message)
-        display(parsed_message)
+        receiver_dispatcher(parsed_message, ip_address, port)
+        # display(parsed_message)

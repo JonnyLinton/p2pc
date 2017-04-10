@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from commands import command_quit
+from sender_commands import command_quit
 
 
 def display(parsed_message):
