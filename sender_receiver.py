@@ -1,11 +1,8 @@
-import socket
-
-from sender_commands import *
-from receiver_commands import receiver_dispatcher
-from display import display
 from parsing import *
+from receiver_commands import receiver_dispatcher
 from semaphore import s
-from user_list import current_online_users
+from sender_commands import *
+
 
 def sender(user_name, ip_address, port):
     s.acquire()

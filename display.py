@@ -1,15 +1,13 @@
 from datetime import datetime
 
-from sender_commands import command_quit
 
-
-def display(parsed_message):
-    user_name, command, message = parsed_message["user"], parsed_message["command"], parsed_message["message"]
+def display(message_params):
+    user_name, message_params = message_params["user"], message_params["message"]
     current_time = datetime.now()
+    print(str(current_time) + " " + "<" + user_name + ">: " + message_params)
 
-    if command == "/quit":
-        command_quit()
-    elif command in ["/leave", "/join"]:
-        print(str(current_time) + " " + user_name + " " + message)
-    else:
-        print(str(current_time) + " " + "<" + user_name + ">: " + message)
+
+def display_notification(message_params):
+    user_name, message_params = message_params["user"], message_params["message"]
+    current_time = datetime.now()
+    print(str(current_time) + " " + user_name + " " + message_params)

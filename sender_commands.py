@@ -16,37 +16,38 @@ def sender_dispatcher(parsed_message_dict, ip_address, port):
         talk(parsed_message_dict, ip_address, port)
 
 
-def broadcast_message(message, ip, port):
+def broadcast_message(message_params, ip, port):
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    application_message = build_message(message["user"], message["command"], message["message"])
+    application_message = build_message(message_params["user"], message_params["command"], message_params["message"])
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
     sock.sendto(application_message.encode("utf-8"), (ip, port))
 
-def talk(message, ip, port):
-    broadcast_message(message, ip, port)
 
-def leave(message, ip, port):
-    broadcast_message(message, ip, port)
-    quit(message["user"], port)
+def talk(message_params, ip, port):
+    broadcast_message(message_params, ip, port)
 
-def quit(user_name, port):
-    dict = {}
-    dict["user"] = user_name
-    dict["command"] = "/quit"
-    dict["message"] = "Bye now!"
-    broadcast_message(dict, "127.0.0.1", port)
 
-def who(message, port):
-    broadcast_message(message, "127.0.0.1", port)
+def leave(message_params, ip, port):
+    broadcast_message(message_params, ip, port)
+    quit(message_params["user"], port)
+
+
+# name "_quit" to avoid overriding the built-in quit() function
+def _quit(user_name, port):
+    quit_message = {"user": user_name, "command": "/quit", "message": "Bye now!"}
+    broadcast_message(quit_message, "127.0.0.1", port)
+
+
+def who(message_params, port):
+    broadcast_message(message_params, "127.0.0.1", port)
+
 
 def join(user_name, ip, port):
-    dict = {}
-    dict["user"] = user_name
-    dict["command"] = "/join"
-    dict["message"] = "joined!"
-    broadcast_message(dict, ip, port)
+    join_message = {"user": user_name, "command": "/join", "message": "joined!"}
+    broadcast_message(join_message, ip, port)
+
 
 # Change this so that it is handled by the receiver instead
-def command_quit():
-    print("Bye now!")
-    os._exit(0)
+# def command_quit():
+#     print("Bye now!")
+#     os._exit(0)

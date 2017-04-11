@@ -5,8 +5,10 @@ ADD display.py /
 ADD parsing.py /
 ADD sender_receiver.py /
 ADD setup.py /
-ADD commands.py /
+ADD sender_commands.py /
 ADD semaphore.py /
+ADD receiver_commands.py /
+ADD user_list.py /
 
 RUN pip install -e .
 
