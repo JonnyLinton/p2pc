@@ -1,4 +1,6 @@
-# command logic for receiver
+# Command logic for receiver
+
+import os
 
 from user_list import current_online_users
 from sender_commands import broadcast_message
@@ -15,20 +17,17 @@ def receiver_dispatcher(message_params, ip_address, port):
         # print list of users
         print(current_online_users)
     elif command == "/leave":
-        # display_notification(message_params)
+        display_notification(message_params)
         # remove user from online list
-        return True
+        current_online_users.remove(user)
     elif command == "/quit":
-        # display(message_params)
-        # os.exit(0)
-        return True
+        print(message)
+        os._exit(0)  # TODO: Find a more comprehensive solution?
     elif command == "/ping":
-        # check if user in online list
-        # if not, add user to list
+        # check if user in online list - if not, add user to list
         return True
     else:  # /talk
-        # display(message_params)
-        return True
+        display(message_params)
 
 
 def ping(user_name, ip, port):

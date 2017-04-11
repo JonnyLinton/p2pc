@@ -1,7 +1,7 @@
 # Command logic for sender
 
 import socket
-import os
+
 from parsing import build_message
 
 
@@ -29,7 +29,7 @@ def talk(message_params, ip, port):
 
 def leave(message_params, ip, port):
     broadcast_message(message_params, ip, port)
-    quit(message_params["user"], port)
+    _quit(message_params["user"], port)
 
 
 # name "_quit" to avoid overriding the built-in quit() function
@@ -45,9 +45,3 @@ def who(message_params, port):
 def join(user_name, ip, port):
     join_message = {"user": user_name, "command": "/join", "message": "joined!"}
     broadcast_message(join_message, ip, port)
-
-
-# Change this so that it is handled by the receiver instead
-# def command_quit():
-#     print("Bye now!")
-#     os._exit(0)

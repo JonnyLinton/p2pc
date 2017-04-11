@@ -9,7 +9,7 @@ def construct_message_parameters(user_name, user_message):
     message_params = {"user": user_name}
     if user_message == "/leave":
         message_params["command"] = "/leave"
-        message_params["message"] = ""
+        message_params["message"] = "left!"
     elif user_message == "/who":
         message_params["command"] = "/who"
         message_params["message"] = ""
