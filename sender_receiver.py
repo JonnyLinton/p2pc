@@ -13,7 +13,7 @@ def sender(user_name, ip_address, port):
         sender_dispatcher(message_dict, ip_address, port)
 
 
-def receiver(ip_address, port):
+def receiver(current_user, ip_address, port):
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     sock.bind(("", port))
     s.release()
@@ -21,5 +21,4 @@ def receiver(ip_address, port):
         application_message = sock.recv(1024)
         message = application_message.decode("utf-8")
         parsed_message = parse_message(message)
-        receiver_dispatcher(parsed_message, ip_address, port)
-        # display(parsed_message)
+        receiver_dispatcher(current_user, parsed_message, ip_address, port)
