@@ -19,6 +19,8 @@ def receiver_dispatcher(current_user, message_params, ip_address, port):
         display_notification(message_params)
         if user in current_online_users:
             current_online_users.remove(user)
+    elif command == "/private":
+        display_private(message_params)
     elif command == "/quit":
         print(message)
         os._exit(0)  # TODO: Find a more comprehensive solution?
