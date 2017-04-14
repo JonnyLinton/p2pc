@@ -30,4 +30,4 @@ def display_who():
 def display_private(message_params):
     user_name, message_params = message_params["user"], message_params["message"]
     current_time = datetime.now()
-    print(str(current_time) + " " + "[" + user_name + "] (PRIVATE): " + message_params)
+    print(str(current_time) + " " + "[" + user_name + "] 👥 : " + message_params)
