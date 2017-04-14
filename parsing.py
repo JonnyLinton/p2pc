@@ -1,12 +1,13 @@
 import re
 
 
-def build_message(user_name, command, message):
-    return "user: " + user_name + "\n" + "command: " + command + "\n" + "message: " + message + "\n\n"
+def build_message(user_name, ip, command, message):
+    return "user: " + user_name + "\n" + "ip: " + ip + "\n" + "command: " + command + "\n" + "message: " + message + "\n\n"
 
 
 def construct_message_parameters(user_name, user_message):
-    message_params = {"user": user_name}
+    from sender_commands import get_ip_address
+    message_params = {"user": user_name, "ip": get_ip_address()}
     if user_message == "/leave":
         message_params["command"] = "/leave"
         message_params["message"] = "left!"

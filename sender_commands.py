@@ -5,9 +5,9 @@ import socket
 from parsing import build_message
 from user_list import current_online_users
 
+
 def sender_dispatcher(parsed_message_dict, ip_address, port):
-    user_name, command, message = parsed_message_dict["user"], parsed_message_dict["command"], parsed_message_dict[
-        "message"]
+    command = parsed_message_dict["command"]
     if command == "/leave":
         leave(parsed_message_dict, ip_address, port)
     elif command == "/who":
@@ -20,7 +20,7 @@ def sender_dispatcher(parsed_message_dict, ip_address, port):
 
 def broadcast_message(message_params, ip, port):
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    application_message = build_message(message_params["user"], message_params["command"], message_params["message"])
+    application_message = build_message(message_params["user"], message_params["ip"], message_params["command"], message_params["message"])
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
     sock.sendto(application_message.encode("utf-8"), (ip, port))
 
@@ -36,7 +36,7 @@ def leave(message_params, ip, port):
 
 # name "_quit" to avoid overriding the built-in quit() function
 def _quit(user_name, port):
-    quit_message = {"user": user_name, "command": "/quit", "message": "Bye now!"}
+    quit_message = {"user": user_name, "ip": get_ip_address(), "command": "/quit", "message": "Bye now!"}
     broadcast_message(quit_message, "127.0.0.1", port)
 
 
@@ -45,8 +45,14 @@ def who(message_params, port):
 
 
 def join(user_name, ip, port):
-    join_message = {"user": user_name, "command": "/join", "message": "joined!"}
+    join_message = {"user": user_name, "ip": get_ip_address(), "command": "/join", "message": "joined!"}
     broadcast_message(join_message, ip, port)
+
+
+def get_ip_address():
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.connect(("8.8.8.8", 80))
+    return str(s.getsockname()[0])
 
 
 def private(message_params, port):
@@ -65,6 +71,6 @@ def private(message_params, port):
         # get user ip
         receiver_ip = search_results[0][1]
         message = input("Private message to " + receiver_name + ": ")
-        private_message = {"user": message_params["user"], "command": "/private", "message": message}
+        private_message = {"user": message_params["user"], "ip": message_params["ip"], "command": "/private", "message": message}
         print(private_message)
         broadcast_message(private_message, receiver_ip, port)
