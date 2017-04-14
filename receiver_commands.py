@@ -9,12 +9,11 @@ from display import *
 
 def receiver_dispatcher(current_user, message_params, ip_address, port):
     user, ip, command, message = message_params["user"], message_params["ip"], message_params["command"], message_params["message"]
-    user = str(user)
     if command == "/join":
         ping(current_user, ip_address, port)
         display_notification(message_params)
     elif command == "/who":
-        print(current_online_users)
+        display_who()
     elif command == "/leave":
         display_notification(message_params)
         if (user, ip) in current_online_users:
