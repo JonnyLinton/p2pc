@@ -8,7 +8,8 @@ ADD setup.py /
 ADD sender_commands.py /
 ADD semaphore.py /
 ADD receiver_commands.py /
-ADD user_list.py /
+ADD channels.py /
+ADD current_channel.py /
 
 RUN pip install -e .
 

@@ -3,7 +3,8 @@
 import socket
 
 from parsing import build_message
-from user_list import current_online_users
+from channels import channels
+from current_channel import current_channel
 
 
 def sender_dispatcher(parsed_message_dict, ip_address, port):
@@ -14,6 +15,8 @@ def sender_dispatcher(parsed_message_dict, ip_address, port):
         who(parsed_message_dict, port)
     elif command.startswith("/private"):
         private(parsed_message_dict, port)
+    elif command.startswith("/channel"):
+        channel(parsed_message_dict, port)
     else:
         talk(parsed_message_dict, ip_address, port)
 
@@ -22,6 +25,10 @@ def broadcast_message(message_params, ip, port):
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     application_message = build_message(message_params["user"], message_params["ip"], message_params["command"], message_params["message"])
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+    #  TODO: loop through all members of the channel and send to them (can no longer broadcast)
+    # for user_ip_tuple in channels[current_channel[0]]:
+    #     print("sending to: " + user_ip_tuple)
+    #     sock.sendto(application_message.encode("utf-8"), (user_ip_tuple[1], port))
     sock.sendto(application_message.encode("utf-8"), (ip, port))
 
 
@@ -62,7 +69,7 @@ def private(message_params, port):
         # get receiver name
         receiver_name = command_and_receiver_name[1]
     # Now we look if this user is currently online
-    search_results = [user for user in current_online_users if user[0] == receiver_name]
+    search_results = [user for user in channels[current_channel[0]] if user[0] == receiver_name]
     if not search_results:
         # user is not online
         print(receiver_name + " is not currently online")
@@ -72,3 +79,22 @@ def private(message_params, port):
         message = input("Private message to " + receiver_name + ": ")
         private_message = {"user": message_params["user"], "ip": message_params["ip"], "command": "/private", "message": message}
         broadcast_message(private_message, receiver_ip, port)
+
+
+def channel(message_params, port):
+    user, ip = message_params["user"], message_params["ip"]
+    command_and_channel_name = message_params["message"].split(" ")
+    new_channel_name = ""
+    if len(command_and_channel_name) > 1:
+        new_channel_name = command_and_channel_name[1]
+    #  delete the user from the old channel
+    channels[current_channel[0]].remove((user, ip))
+    #  if the channel doesn't exit, create it
+    if new_channel_name not in channels:
+        channels[new_channel_name] = []
+    #  add them to the new channel
+    channels[new_channel_name].append((user, ip))
+    #  change the current_channel to reflect current state
+    current_channel[0] = new_channel_name
+    quit_message = {"user": user, "ip": ip, "command": "/channel", "message": "Switched to channel " + current_channel[0]}
+    broadcast_message(quit_message, "127.0.0.1", port)

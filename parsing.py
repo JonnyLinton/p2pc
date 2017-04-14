@@ -17,6 +17,9 @@ def construct_message_parameters(user_name, user_message):
     elif user_message.startswith("/private"):
         message_params["command"] = "/private"
         message_params["message"] = user_message
+    elif user_message.startswith("/channel"):
+        message_params["command"] = "/channel"
+        message_params["message"] = user_message
     else:
         message_params["command"] = "/talk"
         message_params["message"] = user_message
