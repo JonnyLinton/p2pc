@@ -8,11 +8,11 @@ from user_list import current_online_users
 
 def sender_dispatcher(parsed_message_dict, ip_address, port):
     command = parsed_message_dict["command"]
-    if command == "/leave":
+    if command == "LEAVE":
         leave(parsed_message_dict, ip_address, port)
-    elif command == "/who":
+    elif command == "WHO":
         who(parsed_message_dict, port)
-    elif command.startswith("/private"):
+    elif command == "PRIVATE-TALK":
         private(parsed_message_dict, port)
     else:
         talk(parsed_message_dict, ip_address, port)
@@ -36,7 +36,7 @@ def leave(message_params, ip, port):
 
 # name "_quit" to avoid overriding the built-in quit() function
 def _quit(user_name, port):
-    quit_message = {"user": user_name, "ip": get_ip_address(), "command": "/quit", "message": "Bye now!"}
+    quit_message = {"user": user_name, "ip": get_ip_address(), "command": "QUIT", "message": "Bye now!"}
     broadcast_message(quit_message, "127.0.0.1", port)
 
 
@@ -45,7 +45,7 @@ def who(message_params, port):
 
 
 def join(user_name, ip, port):
-    join_message = {"user": user_name, "ip": get_ip_address(), "command": "/join", "message": "joined!"}
+    join_message = {"user": user_name, "ip": get_ip_address(), "command": "JOIN", "message": "joined!"}
     broadcast_message(join_message, ip, port)
 
 
@@ -70,5 +70,5 @@ def private(message_params, port):
         # get user ip
         receiver_ip = search_results[0][1]
         message = input("Private message to " + receiver_name + ": ")
-        private_message = {"user": message_params["user"], "ip": message_params["ip"], "command": "/private", "message": message}
+        private_message = {"user": message_params["user"], "ip": message_params["ip"], "command": "PRIVATE-TALK", "message": message}
         broadcast_message(private_message, receiver_ip, port)

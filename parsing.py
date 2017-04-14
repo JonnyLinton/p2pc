@@ -9,16 +9,16 @@ def construct_message_parameters(user_name, user_message):
     from sender_commands import get_ip_address
     message_params = {"user": user_name, "ip": get_ip_address()}
     if user_message == "/leave":
-        message_params["command"] = "/leave"
+        message_params["command"] = "LEAVE"
         message_params["message"] = "left!"
     elif user_message == "/who":
-        message_params["command"] = "/who"
+        message_params["command"] = "WHO"
         message_params["message"] = ""
     elif user_message.startswith("/private"):
-        message_params["command"] = "/private"
+        message_params["command"] = "PRIVATE-TALK"
         message_params["message"] = user_message
     else:
-        message_params["command"] = "/talk"
+        message_params["command"] = "TALK"
         message_params["message"] = user_message
     return message_params
 

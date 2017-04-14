@@ -9,21 +9,21 @@ from display import *
 
 def receiver_dispatcher(current_user, message_params, ip_address, port):
     user, ip, command, message = message_params["user"], message_params["ip"], message_params["command"], message_params["message"]
-    if command == "/join":
+    if command == "JOIN":
         ping(current_user, ip_address, port)
         display_notification(message_params)
-    elif command == "/who":
+    elif command == "WHO":
         display_who()
-    elif command == "/leave":
+    elif command == "LEAVE":
         display_notification(message_params)
         if (user, ip) in current_online_users:
             current_online_users.remove((user, ip))
-    elif command == "/private":
+    elif command == "PRIVATE-TALK":
         display_private(message_params)
-    elif command == "/quit":
+    elif command == "QUIT":
         print(message)
         os._exit(0)  # TODO: Find a more comprehensive solution?
-    elif command == "/ping":
+    elif command == "PING":
         if (user, ip) not in current_online_users:
             current_online_users.append((user, ip))
     else:  # /talk
@@ -31,5 +31,5 @@ def receiver_dispatcher(current_user, message_params, ip_address, port):
 
 
 def ping(user_name, ip, port):
-    ping_message = {"user": user_name, "ip": get_ip_address(), "command": "/ping", "message": ""}
+    ping_message = {"user": user_name, "ip": get_ip_address(), "command": "PING", "message": ""}
     broadcast_message(ping_message, ip, port)
