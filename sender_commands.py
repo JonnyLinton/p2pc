@@ -58,7 +58,6 @@ def get_ip_address():
 def private(message_params, port):
     command_and_receiver_name = message_params["message"].split(" ")
     receiver_name = ""
-    receiver_ip = ""
     if len(command_and_receiver_name) > 1:
         # get receiver name
         receiver_name = command_and_receiver_name[1]
@@ -72,5 +71,4 @@ def private(message_params, port):
         receiver_ip = search_results[0][1]
         message = input("Private message to " + receiver_name + ": ")
         private_message = {"user": message_params["user"], "ip": message_params["ip"], "command": "/private", "message": message}
-        print(private_message)
         broadcast_message(private_message, receiver_ip, port)
