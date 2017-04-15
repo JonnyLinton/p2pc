@@ -23,18 +23,18 @@ def sender_dispatcher(parsed_message_dict, port):
 
 def broadcast_message(message_params, ip, port):
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    application_message = build_message(message_params["user"], message_params["ip"], message_params["command"], message_params["message"])
+    application_message = build_message(message_params["user"], message_params["ip"], message_params["channel"], message_params["command"], message_params["message"])
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
     sock.sendto(application_message.encode("utf-8"), (ip, port))
 
 
 def broadcast_channel_message(message_params, port):
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    application_message = build_message(message_params["user"], message_params["ip"], message_params["command"], message_params["message"])
+    application_message = build_message(message_params["user"], message_params["ip"], message_params["channel"], message_params["command"], message_params["message"])
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
     #  loop through all members of the channel and send to them (can no longer broadcast)
     for (user, ip_address) in channels[current_channel[0]]:
-        print("sending to: " + user + " " + ip_address)
+        # print("sending to: " + user + " " + ip_address)
         sock.sendto(application_message.encode("utf-8"), (ip_address, port))
 
 
@@ -49,7 +49,7 @@ def leave(message_params, port):
 
 # name "_quit" to avoid overriding the built-in quit() function
 def _quit(user_name, port):
-    quit_message = {"user": user_name, "ip": get_ip_address(), "command": "/quit", "message": "Bye now!"}
+    quit_message = {"user": user_name, "ip": get_ip_address(), "channel": current_channel[0], "command": "/quit", "message": "Bye now!"}
     broadcast_message(quit_message, "127.0.0.1", port)
 
 
@@ -58,7 +58,7 @@ def who(message_params, port):
 
 
 def join(user_name, port):
-    join_message = {"user": user_name, "ip": get_ip_address(), "command": "/join", "message": "joined!"}
+    join_message = {"user": user_name, "ip": get_ip_address(), "channel": current_channel[0], "command": "/join", "message": "joined!"}
     broadcast_message(join_message, "255.255.255.255", port)
 
 
@@ -83,7 +83,7 @@ def private(message_params, port):
         # get user ip
         receiver_ip = search_results[0][1]
         message = input("Private message to " + receiver_name + ": ")
-        private_message = {"user": message_params["user"], "ip": message_params["ip"], "command": "/private", "message": message}
+        private_message = {"user": message_params["user"], "ip": message_params["ip"], "channel": message_params["channel"], "command": "/private", "message": message}
         broadcast_message(private_message, receiver_ip, port)
 
 
@@ -98,6 +98,5 @@ def channel(message_params, port):
     #  change the current_channel to reflect current state
     current_channel[0] = new_channel_name
 
-    message_to_send = old_channel_name + " " + new_channel_name
-    channel_change_message = {"user": user, "ip": ip, "command": "/channel", "message": message_to_send}
+    channel_change_message = {"user": user, "ip": ip, "channel": current_channel[0], "command": "/channel", "message": old_channel_name}
     broadcast_message(channel_change_message, "255.255.255.255", port)
