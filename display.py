@@ -20,9 +20,9 @@ def display_error(error_message):
     print(str(current_time) + " " + error_message + ".")
 
 
-def display_date_and_message(message):
+def display_channel_change(message):
     current_time = datetime.now()
-    print(str(current_time) + " " + message)
+    print(str(current_time) + " Switched to channel #" + message)
 
 
 def display_who():

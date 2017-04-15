@@ -22,7 +22,15 @@ def receiver_dispatcher(current_user, message_params, ip_address, port):
     elif command == "/private":
         display_private(message_params)
     elif command == "/channel":
-        display_date_and_message(message)
+        #  change the channel of the user
+        old_channel, new_channel = message.split(" ")
+        channels[old_channel].remove((user, ip))
+        if new_channel not in channels:
+            channels[new_channel] = []
+        channels[new_channel].append((user, ip))
+
+        if user == current_user:
+            display_channel_change(new_channel)
     elif command == "/quit":
         print(message)
         os._exit(0)  # TODO: Find a more comprehensive solution?

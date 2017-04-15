@@ -4,13 +4,13 @@ from semaphore import s
 from sender_commands import *
 
 
-def sender(user_name, ip_address, port):
+def sender(user_name, port):
     s.acquire()
-    join(user_name, ip_address, port)
+    join(user_name, port)
     while True:
         user_message = input()
         message_dict = construct_message_parameters(user_name, user_message)
-        sender_dispatcher(message_dict, ip_address, port)
+        sender_dispatcher(message_dict, port)
 
 
 def receiver(current_user, ip_address, port):
