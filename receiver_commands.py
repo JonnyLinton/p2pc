@@ -40,7 +40,8 @@ def receiver_dispatcher(current_user, message_params, ip_address, port):
         os._exit(0)  # TODO: Find a more comprehensive solution?
     elif command == "/ping":
         # add the user to the channel they are in
-        print(channel)
+        if channel not in channels:
+            channels[channel] = []
         if (user, ip) not in channels[channel]:
             channels[channel].append((user, ip))
     else:  # /talk
