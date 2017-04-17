@@ -9,13 +9,13 @@ from current_channel import current_channel
 
 def sender_dispatcher(parsed_message_dict, port):
     command = parsed_message_dict["command"]
-    if command == "/leave":
+    if command == "LEAVE":
         leave(parsed_message_dict, port)
-    elif command == "/who":
+    elif command == "WHO":
         who(parsed_message_dict, port)
-    elif command.startswith("/private"):
+    elif command.startswith("PRIVATE-TALK"):
         private(parsed_message_dict, port)
-    elif command.startswith("/channel"):
+    elif command.startswith("CHANNEL"):
         channel(parsed_message_dict, port)
     else:
         talk(parsed_message_dict, port)
@@ -49,7 +49,7 @@ def leave(message_params, port):
 
 # name "_quit" to avoid overriding the built-in quit() function
 def _quit(user_name, port):
-    quit_message = {"user": user_name, "ip": get_ip_address(), "channel": current_channel[0], "command": "/quit", "message": "Bye now!"}
+    quit_message = {"user": user_name, "ip": get_ip_address(), "channel": current_channel[0], "command": "QUIT", "message": "Bye now!"}
     broadcast_message(quit_message, "127.0.0.1", port)
 
 
@@ -58,7 +58,7 @@ def who(message_params, port):
 
 
 def join(user_name, port):
-    join_message = {"user": user_name, "ip": get_ip_address(), "channel": current_channel[0], "command": "/join", "message": "joined!"}
+    join_message = {"user": user_name, "ip": get_ip_address(), "channel": current_channel[0], "command": "JOIN", "message": "joined!"}
     broadcast_message(join_message, "255.255.255.255", port)
 
 
@@ -83,7 +83,7 @@ def private(message_params, port):
         # get user ip
         receiver_ip = search_results[0][1]
         message = input("Private message to " + receiver_name + ": ")
-        private_message = {"user": message_params["user"], "ip": message_params["ip"], "channel": message_params["channel"], "command": "/private", "message": message}
+        private_message = {"user": message_params["user"], "ip": message_params["ip"], "channel": message_params["channel"], "command": "PRIVATE-TALK", "message": message}
         broadcast_message(private_message, receiver_ip, port)
 
 
@@ -98,5 +98,5 @@ def channel(message_params, port):
     #  change the current_channel to reflect current state
     current_channel[0] = new_channel_name
 
-    channel_change_message = {"user": user, "ip": ip, "channel": current_channel[0], "command": "/channel", "message": old_channel_name}
+    channel_change_message = {"user": user, "ip": ip, "channel": current_channel[0], "command": "CHANNEL", "message": old_channel_name}
     broadcast_message(channel_change_message, "255.255.255.255", port)
